@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import CoinGecko from 'coingecko-api'
 
 @Controller()
 export class AppController {
