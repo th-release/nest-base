@@ -10,6 +10,6 @@ import { SystemGateway } from './system.gateway';
   ],
   exports: [TypeOrmModule],
   controllers: [SystemController],
-  providers: [SystemService, SystemGateway]
+  providers: [SystemService]
 })
 export class SystemModule { }
