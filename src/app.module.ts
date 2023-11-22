@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationModule } from './configuration/configuration.module';
-import { RedisModule } from './utils/redis';
 import { SystemModule } from './system/system.module';
+import { AuthModule } from './auth/auth.module';
+import UserEntity from './entities/auth/user.entity';
+import { AuthMiddleware } from './auth/auth.middleware';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
@@ -18,15 +18,21 @@ import { SystemModule } from './system/system.module';
       username: configService.get('DATABASE_USERNAME'),
       password: configService.get('DATABASE_PASSWORD'),
       database: configService.get('DATABASE_SCHEMA'),
-      entities: [],
-      synchronize: configService.get<boolean>('TYPEORM_SYBCHRONIZE')
+      entities: [
+        UserEntity
+      ],
+      logging: configService.get<boolean>('DATABASE_LOGGING'),
+      synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE')
     })
   }),
     ConfigurationModule,
     // RedisModule,
-    SystemModule
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    SystemModule,
+    AuthModule
+  ]
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('*')
+  }
+}
