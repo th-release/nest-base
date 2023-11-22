@@ -1,21 +1,26 @@
-function getCharacters(type: string) {
-  switch (type.toLowerCase()) {
+function getCharacters(
+  type:
+    'numeric' | 'lowercase' | 'uppercase' | 'all' | 'alphanumeric'
+): string {
+  switch (type) {
     case 'numeric':
-    case 'number':
       return '0123456789';
     case 'lowercase':
       return 'abcdefghijklmnopqrstuvwxyz';
     case 'uppercase':
       return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    case 'alphanumeric':
     case 'all':
+    case 'alphanumeric':
       return '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     default:
       throw new Error(`Invalid type: ${type}`);
   }
 }
 
-export default function getRandom(type: string, length: number) {
+export default function getRandom(
+  type: 'numeric' | 'lowercase' | 'uppercase' | 'all' | 'alphanumeric',
+  length: number
+): string {
   let result = '';
   const characters = getCharacters(type);
 
